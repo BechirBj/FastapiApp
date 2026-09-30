@@ -2,28 +2,30 @@ pipeline {
     agent any
 
     stages {
-
         stage('Install Dependencies') {
             steps {
-                sh '''
-                    python3 -m venv venv
-                    ./venv/bin/pip install --upgrade pip
-                    ./venv/bin/pip install -r requirements.txt
+                bat '''
+                    python -m venv venv
+                    venv\\Scripts\\python.exe -m pip install --upgrade pip
+                    venv\\Scripts\\python.exe -m pip install -r requirements.txt
                 '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh './run_tests.sh'
+                bat '''
+                    venv\\Scripts\\python.exe -m pytest tests
+                '''
             }
         }
     }
 
     post {
         always {
-            sh '''
-                docker rm -f fastapi-users 2>/dev/null || true
+            bat '''
+                docker rm -f fastapi-users 2>NUL
+                exit /B 0
             '''
         }
 
