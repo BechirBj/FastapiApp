@@ -147,39 +147,4 @@ def delete_user(user_id: int):
 
     return None
 
-@app.get("/users/total",status_code=200)
-def test_total(tmp_path):
-    print("####### Testing the total #######")
-
-    database = tmp_path / "test.db"
-
-    init_database(str(database))
-
-    conn = get_connection(str(database))
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        INSERT INTO employes
-        (Nom, Prenom, Poste, Salaire, Email, Service)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (
-        "Ben Ali",
-        "Ahmed",
-        "Developer",
-        2500,
-        "ahmed@test.com",
-        "IT"
-    ))
-
-    conn.commit()
-
-    cursor.execute("""
-        SELECT SUM(Salaire)
-        FROM employes
-    """)
-
-    total_salaire = cursor.fetchone()[0]
-
-    conn.close()
-
-    assert total_salaire == 2500
+# @app.get("/users/total",status_code=200)

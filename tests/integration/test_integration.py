@@ -68,20 +68,38 @@ def test_insert_employee(tmp_path):
     assert employee["Salaire"] == 2500
 
 
-def test_total():
-    print("####### Testing the total#######")
+def test_total(tmp_path):
+    print("####### Testing the total #######")
+
     database = tmp_path / "test.db"
 
     init_database(str(database))
 
-    conn = sqlite3.connect(database)
-
+    conn = get_connection(str(database))
     cursor = conn.cursor()
 
     cursor.execute("""
-    SELECT salaire FROM employes
-    SUM
+        INSERT INTO employes
+        (Nom, Prenom, Poste, Salaire, Email, Service)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (
+        "Ben Ali",
+        "Ahmed",
+        "Developer",
+        2500,
+        "ahmed@test.com",
+        "IT"
+    ))
+
+    conn.commit()
+
+    cursor.execute("""
+        SELECT SUM(Salaire)
+        FROM employes
     """)
-    total_salaire=cursor.fetchone()
+
+    total_salaire = cursor.fetchone()[0]
+
     conn.close()
+
     assert total_salaire == 2500
