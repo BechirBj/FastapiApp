@@ -146,3 +146,17 @@ def delete_user(user_id: int):
         )
 
     return None
+
+@app.get("/users/total",status_code=200)
+def get_total():
+    connt = get_connection(DATABASE)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT Salaire FROM employes
+        SUM
+    """)    
+
+    total_salaire= conn.fetchone()
+    conn.close()
+
+    return total_salaire
