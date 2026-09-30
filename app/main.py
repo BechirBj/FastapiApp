@@ -6,7 +6,7 @@ from app.database import get_connection, init_database
 
 
 app = FastAPI(
-    title="Employee API",
+    title="Employee API V1",
     description="Simple FastAPI application for managing employees",
     version="1.0.0"
 )
